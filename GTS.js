@@ -1,6 +1,21 @@
 let cancionSecreta = null;
 let reproductorAudio = null;
 let vidas = 3;
+let puntos = 0;
+let tiempoPermitido = 5;
+
+const barraProgreso = document.getElementById("progressBar");
+const start = document.getElementById("play");
+const zonaJuego = document.getElementById("gameZone");
+const entrada = document.getElementById("guess");
+const comprobar = document.getElementById("check");
+const respuesta = document.getElementById("feedback");
+const intentos = document.getElementById("hearts");
+const siguienteCancion = document.getElementById("next");
+const marcadorPuntos = document.getElementById("marcador");
+const selectorGenero = document.getElementById("genreSelector");
+
+
 async function buscarCancion(genero) {
     const url = `https://itunes.apple.com/search?term=${genero}&entity=song&limit=5`;
 
@@ -13,7 +28,22 @@ async function buscarCancion(genero) {
 
         cancionSecreta = listaCanciones[indiceAleat];
 
+        if (reproductorAudio !== null) {
+            reproductorAudio.pause();
+            reproductorAudio.currentTime = 0;
+        }
+
         reproductorAudio = new Audio(cancionSecreta.previewUrl);
+
+        reproductorAudio.addEventListener("timeupdate", () => {
+
+            const porcentaje = (reproductorAudio.currentTime / tiempoPermitido) * 100;
+            barraProgreso.value = porcentaje;
+            if (reproductorAudio.currentTime >= tiempoPermitido) {
+                reproductorAudio.pause();
+                reproductorAudio.currentTime = 0;
+            }
+        });
 
         reproductorAudio.play();
         console.log("Escuchando canción secreta");
@@ -27,26 +57,23 @@ function limpiarTexto(texto) {
 
     let textoSeguro = String(texto);
 
-    return texto
+    return textoSeguro
         .trim()
         .toLowerCase()
         .normalize("NFD")
         .replace(/[\u0300-\u036f]/g, "");
 }
 
-const start = document.getElementById("play");
-const zonaJuego = document.getElementById("gameZone");
-const entrada = document.getElementById("guess");
-const comprobar = document.getElementById("check");
-const respuesta = document.getElementById("feedback");
-const intentos = document.getElementById("hearts");
-
 start.addEventListener("click", () => {
     console.log("Iniciando juego...");
-    buscarCancion("reggueton");
+    const generoElegido = selectorGenero.value;
+    buscarCancion(generoElegido);
 
+    selectorGenero.style.display = "none";
     start.style.display = "none";
+    siguienteCancion.style.display = "none";
     zonaJuego.style.display = "block";
+    intentos.innerText = `Lifes left: ${vidas}`;
 });
 
 comprobar.addEventListener("click", () => {
@@ -54,20 +81,52 @@ comprobar.addEventListener("click", () => {
     const correctaLimpia = limpiarTexto(cancionSecreta.trackName);
 
     if (usuarioLimpio === correctaLimpia) {
-        respuesta.innerText = "Correcto";
+        respuesta.innerText = "Correct";
         respuesta.style.color = "green";
-        intentos.style.display = "none";
+
+        if (reproductorAudio) reproductorAudio.pause();
+
+        comprobar.style.display = "none";
+        siguienteCancion.style.display = "block";
+        puntos += 100;
+        marcadorPuntos.innerText = `SCORE: ${puntos}`;
+
     } else {
-        respuesta.innerText = "Incorrecto";
+        respuesta.innerText = "Incorrect";
         respuesta.style.color = "red";
+
         --vidas;
-        intentos.innerText = `Intentos Restantes: ${vidas}`;
-        if (vidas == 0) {
-            respuesta.innerText = "Has Perdido";
+        intentos.innerText = `Lifes left: ${vidas}`;
+
+        if (vidas == 2) {
+            tiempoPermitido = 15;
+            reproductorAudio.play();
+        } else if (vidas == 1) {
+            tiempoPermitido = 30;
+            reproductorAudio.play();
+        } else if (vidas == 0) {
+            respuesta.innerText = "You Lost :/";
             comprobar.style.display = "none";
+            siguienteCancion.style.display = "block";
+            if (reproductorAudio) reproductorAudio.pause();
         }
     }
 
+});
+
+siguienteCancion.addEventListener("click", () => {
+    respuesta.innerText = "";
+    entrada.value = "";
+    siguienteCancion.style.display = "none";
+    comprobar.style.display = "block";
+
+    const generoActual = selectorGenero.value;
+    buscarCancion(generoActual);
+
+    barraProgreso.value = 0;
+    vidas = 3;
+    tiempoPermitido = 5;
+    intentos.innerText = `Lifes left: ${vidas}`;
 });
 
 

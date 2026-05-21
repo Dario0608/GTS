@@ -10,11 +10,22 @@
 <body>
     <main id="gameContainer">
         <h1>RetroBeats</h1>
+
+        <select id="genreSelector">
+            <option value="pop">Pop</option>
+            <option value="rock">Rock</option>
+            <option value="reggaeton">Reggaeton</option>
+            <option value="anime">Anime</option>
+        </select>
+
         <button id="play">Start</button>
+
         <div id="gameZone" style="display: none;">
-            <p>Playing...</p>
+            <progress id="progressBar" value="0" max="100" style="width: 100px; height: 20px"></progress>
+            <p id="marcador"><b>SCORE: 00000</b></p>
             <input id="guess" type="text" placeholder="guess the name of the song">
             <button id="check">try</button>
+            <br><button id="next">next song</button>
             <p id="feedback"></p>
             <p id="hearts"></p>
         </div>
