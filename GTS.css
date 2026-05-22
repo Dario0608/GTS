@@ -1,0 +1,120 @@
+@import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
+
+body{
+    background-color: #0a0112; 
+    color: #ffffff;
+    font-family: 'Press Start 2P', monospace; 
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh; 
+    margin: 0;
+}
+
+#gameContainer {
+    background-color: #140526; 
+    border: 4px solid #39ff14; 
+    box-shadow: 0 0 15px #39ff14, inset 0 0 10px #39ff14; 
+    padding: 40px;
+    border-radius: 8px;
+    text-align: center;
+    max-width: 450px;
+    width: 100%;
+}
+
+h1 {
+    color: #fffb00; 
+    font-size: 1.8rem;
+    text-transform: uppercase;
+    margin-bottom: 30px;
+    letter-spacing: -1px; 
+    
+    text-shadow: 
+        3px 3px 0px #ff003c, 
+        6px 6px 0px #990024, 
+        9px 9px 20px rgba(255, 0, 60, 0.7);
+}
+
+input[type="text"] {
+    background-color: #1a0b2e; 
+    border: 2px solid #ff007f; 
+    color: #00ffff; 
+    font-family: 'Press Start 2P', monospace;
+    font-size: 0.7rem; 
+    padding: 12px;
+    width: 85%;
+    margin-bottom: 20px;
+    outline: none; 
+    text-align: center;
+    box-shadow: 0 0 5px #ff007f; 
+    transition: all 0.3s ease; 
+}
+
+input[type="text"]:focus {
+    border-color: #00ffff; 
+    box-shadow: 0 0 15px #00ffff; 
+    color: #ff007f; 
+}
+
+
+input[type="text"]::placeholder {
+    color: rgba(0, 255, 255, 0.4); 
+    font-size: 0.6rem;
+}
+
+
+button {
+    background-color: #ff007f; 
+    color: #ffffff;
+    border: 3px solid #ffffff; 
+    font-family: 'Press Start 2P', monospace;
+    font-size: 0.8rem;
+    padding: 15px 25px;
+    margin: 15px 5px;
+    cursor: pointer;
+    text-transform: uppercase;
+    
+    box-shadow: 0 6px 0px #99004d, 0 0 10px #ff007f;
+    transition: transform 0.1s ease, box-shadow 0.1s ease;
+}
+
+
+button:hover {
+    background-color: #00ffff;
+    color: #000000; 
+    box-shadow: 0 6px 0px #009999, 0 0 15px #00ffff;
+}
+
+
+button:active {
+    transform: translateY(6px); 
+    box-shadow: 0 0px 0px transparent, 0 0 10px #00ffff;
+}
+
+
+#next {
+    background-color: #39ff14; 
+    color: #000000;
+    box-shadow: 0 6px 0px #22990c, 0 0 10px #39ff14;
+}
+
+#next:hover {
+    background-color: #ffffff;
+    color: #000000;
+    box-shadow: 0 6px 0px #cccccc, 0 0 15px #ffffff;
+}
+
+@keyframes temblorArcade {
+    0% { transform: translateX(0); }
+    20% { transform: translateX(-15px) rotate(-1deg); }
+    40% { transform: translateX(15px) rotate(1deg); }
+    60% { transform: translateX(-15px) rotate(-1deg); }
+    80% { transform: translateX(15px) rotate(1deg); }
+    100% { transform: translateX(0); }
+}
+
+.shake-error {
+    animation: temblorArcade 0.4s ease-in-out;
+    border-color: #ff003c !important; 
+    box-shadow: 0 0 25px #ff003c, inset 0 0 15px #ff003c !important;
+}
