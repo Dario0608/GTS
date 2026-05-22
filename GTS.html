@@ -17,14 +17,17 @@
         <button id="play">Start</button>
 
         <div id="gameZone" style="display: none;">
-            <button id="replayBtn" style="margin-bottom: 10px; padding: 5px 10px; cursor: pointer;">▶</button>
-            <progress id="progressBar" value="0" max="30" style="width: 250px; height: 20px"></progress>
+            <div class="audio-row">
+                <button id="replayBtn">▶</button>
+                <progress id="progressBar" value="0" max="30"></progress>
+            </div>
+
             <p id="timeCounter" style="margin-top: 5px; font-family: monospace;">0.0s / 30s</p>
 
             <p id="marcador"><b>SCORE: 00000</b></p>
 
             <input id="guess" type="text" list="suggestion" placeholder="guess the name of the song">
-            <datalist id="suggestion"></datalist>
+            <div id="customSuggestions" class="suggestions-box"></div>
             
             <button id="check">try</button>
             <br><button id="next">next song</button>
@@ -33,6 +36,7 @@
         </div>
 
     </main>
+    <script src="audioGTS.js"></script>
     <script src="GTS.js"></script>
 </body>
 

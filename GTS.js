@@ -21,7 +21,7 @@ const siguienteCancion = document.getElementById("next");
 const marcadorPuntos = document.getElementById("marcador");
 const entradaGenero = document.getElementById("genreSelector");
 const contadorTiempo = document.getElementById("timeCounter");
-const listaSugerencias = document.getElementById("suggestion");
+const listaSugerencias = document.getElementById("customSuggestions");
 
 
 
@@ -51,6 +51,7 @@ async function buscarCancion(genero) {
             if (reproductorAudio.currentTime >= tiempoPermitido) {
                 reproductorAudio.pause();
                 reproductorAudio.currentTime = 0;
+                botonReplay.innerText = "▶";
             }
         });
 
@@ -94,7 +95,9 @@ comprobar.addEventListener("click", () => {
     if (usuarioLimpio === correctaLimpia) {
         respuesta.innerText = "Correct";
         respuesta.style.color = "green";
+        tiempoPermitido = 30;
 
+        botonReplay.innerText = "▶";
         if (reproductorAudio) reproductorAudio.pause();
         playSonidoAcierto();
 
@@ -107,6 +110,7 @@ comprobar.addEventListener("click", () => {
         respuesta.innerText = "Incorrect";
         respuesta.style.color = "red";
 
+        botonReplay.innerText = "▶";
         if (reproductorAudio) reproductorAudio.pause();
         playSonidoError();
         contenedorJuego.classList.add("shake-error");
@@ -161,14 +165,13 @@ siguienteCancion.addEventListener("click", () => {
 
 botonReplay.addEventListener("click", () => {
     if (reproductorAudio) {
-
-        if (!reproductorAudio.paused()) {
+        if (!reproductorAudio.paused) {
             reproductorAudio.pause();
+            botonReplay.innerText = "▶";
         } else {
-            reproductorAudio.currentTime = 0;
             reproductorAudio.play();
+            botonReplay.innerText = "II";
         }
-
     }
 })
 
@@ -178,6 +181,7 @@ entrada.addEventListener("input", () => {
 
     if (textoUsuario.length < 3) {
         listaSugerencias.innerHTML = "";
+        listaSugerencias.style.display = "none";
         return;
     }
 
@@ -190,11 +194,24 @@ entrada.addEventListener("input", () => {
 
             listaSugerencias.innerHTML = "";
 
+            if (datos.results.length === 0) {
+                listaSugerencias.style.display = "none";
+                return;
+            }
+
             datos.results.forEach(cancion => {
-                const opcion = document.createElement("option");
-                opcion.value = cancion.trackName;
-                listaSugerencias.appendChild(opcion);
+                const item = document.createElement("div");
+                item.classList.add("suggestion-item");
+                item.innerText = cancion.trackName;
+
+                item.addEventListener("click", () => {
+                    entrada.value = cancion.trackName;
+                    listaSugerencias.innerHTML = "";
+                    listaSugerencias.style.display = "none";
+                });
+                listaSugerencias.appendChild(item);
             });
+            listaSugerencias.style.display = "block";
         } catch (error) {
             console.error(error);
         }
@@ -202,43 +219,10 @@ entrada.addEventListener("input", () => {
 
 });
 
-function playSonidoError() {
-    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-
-    const oscilador = audioCtx.createOscillator();
-    const volumen = audioCtx.createGain();
-
-    oscilador.type = "square";
-    oscilador.frequency.setValueAtTime(160, audioCtx.currentTime);
-
-    oscilador.frequency.exponentialRampToValueAtTime(70, audioCtx.currentTime + 0.3);
-
-    volumen.gain.setValueAtTime(0.3, audioCtx.currentTime);
-    volumen.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
-
-    oscilador.connect(volumen);
-    volumen.connect(audioCtx.destination);
-
-    oscilador.start();
-    oscilador.stop(audioCtx.currentTime + 0.3);
+document.addEventListener("click", (e) => {
+if(e.target !== entrada && e.target !== listaSugerencias){
+    listaSugerencias.innerHTML = "";
+    listaSugerencias.style.display = "none";
 }
+});
 
-function playSonidoAcierto() {
-    const audioCtx = new (window.AudioContext || window.webkitAudioContext)();
-    const oscilador = audioCtx.createOscillator();
-    const volumen = audioCtx.createGain();
-
-    oscilador.type = "square";
-
-    oscilador.frequency.setValueAtTime(523.25, audioCtx.currentTime);
-    oscilador.frequency.setValueAtTime(880.00, audioCtx.currentTime + 0.08);
-
-    volumen.gain.setValueAtTime(0.2, audioCtx.currentTime);
-    volumen.gain.exponentialRampToValueAtTime(0.01, audioCtx.currentTime + 0.3);
-
-    oscilador.connect(volumen);
-    volumen.connect(audioCtx.destination);
-
-    oscilador.start();
-    oscilador.stop(audioCtx.currentTime + 0.3);
-}

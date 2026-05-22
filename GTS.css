@@ -1,6 +1,10 @@
 @import url('https://fonts.googleapis.com/css2?family=Press+Start+2P&display=swap');
 
-body{
+* {
+    box-sizing: border-box;
+}
+
+body {
     background-color: #0a0112; 
     color: #ffffff;
     font-family: 'Press Start 2P', monospace; 
@@ -13,13 +17,41 @@ body{
 
 #gameContainer {
     background-color: #140526; 
-    border: 4px solid #39ff14; 
-    box-shadow: 0 0 15px #39ff14, inset 0 0 10px #39ff14; 
+    border: 4px solid #ff007f; 
+    box-shadow: 0 0 20px #ff007f, inset 0 0 10px #ff007f; 
     padding: 40px;
     border-radius: 8px;
     text-align: center;
     max-width: 450px;
     width: 100%;
+}
+
+#gameZone {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+.audio-row {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    width: 100%;
+    max-width: 360px;
+    margin: 0 auto 5px auto;
+}
+
+#marcador, #timeCounter {
+    margin: 8px 0;
+    font-size: 0.8rem;
+}
+
+#feedback {
+    font-size: 0.7rem;
+    line-height: 1.4;
+    margin: 15px 0;
 }
 
 h1 {
@@ -28,7 +60,6 @@ h1 {
     text-transform: uppercase;
     margin-bottom: 30px;
     letter-spacing: -1px; 
-    
     text-shadow: 
         3px 3px 0px #ff003c, 
         6px 6px 0px #990024, 
@@ -42,8 +73,10 @@ input[type="text"] {
     font-family: 'Press Start 2P', monospace;
     font-size: 0.7rem; 
     padding: 12px;
-    width: 85%;
-    margin-bottom: 20px;
+    width: 100%;
+    max-width: 360px;
+    margin: 10px auto 20px auto;
+    display: block;
     outline: none; 
     text-align: center;
     box-shadow: 0 0 5px #ff007f; 
@@ -56,12 +89,10 @@ input[type="text"]:focus {
     color: #ff007f; 
 }
 
-
 input[type="text"]::placeholder {
     color: rgba(0, 255, 255, 0.4); 
     font-size: 0.6rem;
 }
-
 
 button {
     background-color: #ff007f; 
@@ -73,11 +104,9 @@ button {
     margin: 15px 5px;
     cursor: pointer;
     text-transform: uppercase;
-    
     box-shadow: 0 6px 0px #99004d, 0 0 10px #ff007f;
     transition: transform 0.1s ease, box-shadow 0.1s ease;
 }
-
 
 button:hover {
     background-color: #00ffff;
@@ -85,12 +114,35 @@ button:hover {
     box-shadow: 0 6px 0px #009999, 0 0 15px #00ffff;
 }
 
-
 button:active {
     transform: translateY(6px); 
     box-shadow: 0 0px 0px transparent, 0 0 10px #00ffff;
 }
 
+#replayBtn {
+    width: 44px;
+    height: 44px;
+    min-width: 44px;
+    padding: 0;
+    margin: 0;
+    font-size: 0.9rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 0px #99004d, 0 0 10px #ff007f;
+}
+
+#replayBtn:active {
+    transform: translateY(4px);
+    box-shadow: 0 0px 0px transparent, 0 0 10px #ff007f;
+}
+
+#check, #next {
+    width: 100%;
+    max-width: 360px;
+    margin: 10px auto;
+    display: block;
+}
 
 #next {
     background-color: #39ff14; 
@@ -117,4 +169,79 @@ button:active {
     animation: temblorArcade 0.4s ease-in-out;
     border-color: #ff003c !important; 
     box-shadow: 0 0 25px #ff003c, inset 0 0 15px #ff003c !important;
+}
+
+progress {
+    -webkit-appearance: none;
+    appearance: none;
+    flex-grow: 1; 
+    height: 22px;
+    border: 2px solid #ff007f;
+    background-color: #1a0b2e;
+    box-shadow: 0 0 8px #ff007f;
+    margin: 0;
+}
+
+progress::-webkit-progress-bar {
+    background-color: #1a0b2e;
+}
+progress::-webkit-progress-value {
+    background-color: #fffb00; 
+}
+
+progress::-moz-progress-bar {
+    background-color: #fffb00;
+}
+
+.suggestions-box {
+    background-color: #1a0b2e;
+    border: 4px double #ffaa00;
+    box-shadow: 0 0 15px rgba(255, 170, 0, 0.4);
+    width: 100%;
+    max-width: 360px;
+    margin: -18px auto 15px auto;
+    display: none;
+    text-align: left;
+    max-height: 150px;
+    overflow-y: auto;
+    position: relative;
+    z-index: 99;
+}
+
+.suggestion-item {
+    padding: 12px;
+    font-size: 0.65rem;
+    color: #ffaa00;
+    cursor: pointer;
+    border-bottom: 1px dashed rgba(255, 170, 0, 0.2);
+}
+
+.suggestion-item:last-child {
+    border-bottom: none;
+}
+
+.suggestion-item:hover {
+    background-color: #ff007f;
+    color: #ffffff;
+}
+
+.suggestions-box::-webkit-scrollbar {
+    width: 24px;
+}
+
+.suggestions-box::-webkit-scrollbar-track {
+    background-color: #8c6600;
+    border-left: 2px solid #ffaa00;
+    margin: 4px;
+}
+
+.suggestions-box::-webkit-scrollbar-thumb {
+    background-color: #ff9900;
+    border: 3px solid #8c6600;
+    border-radius: 0px;
+    box-shadow: 0 0 8px #ffaa00;
+}
+
+.suggestions-box::-webkit-scrollbar-thumb:hover {
+    background-color: #ffaa00;
 }
