@@ -207,7 +207,7 @@ btnCheck.addEventListener("click", () => {
                     feedbackText.innerText = `You lost a life! The song was: ${cancionSecreta.trackName} by ${cancionSecreta.artistName}.`;
                     btnCheck.style.display = "none";
                     btnNextSong.style.display = "block";
-                    btnNextSong.innerText = "CONTINUE PARTIDA";
+                    btnNextSong.innerText = "KEEP PLAYING";
                 } else {
                     feedbackText.innerText = `GAME OVER! The song was: ${cancionSecreta.trackName} by ${cancionSecreta.artistName}`;
                     btnCheck.style.display = "none";
