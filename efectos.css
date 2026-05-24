@@ -1,0 +1,125 @@
+.marcador-exterior {
+    background-color: #140526; 
+    border: 3px double #00ffff;
+    box-shadow: 0 0 12px #00ffff; 
+    padding: 15px;
+    font-size: 0.85rem; 
+    color: #fffb00; 
+    text-shadow: 2px 2px 0px #ff007f;
+    width: 100%;
+    max-width: 450px; /* Clonar el tamaño de la consola de juego */
+    text-align: center;
+    box-sizing: border-box;
+    margin-bottom: -5px; 
+}
+
+.retro-score-pop { animation: popPuntosArcade 0.4s ease-out; }
+
+@keyframes popPuntosArcade {
+    0% { transform: scale(1); color: #fffb00; box-shadow: 0 0 12px #00ffff; }
+    50% { transform: scale(1.1) rotate(1deg); color: #39ff14; border-color: #39ff14; box-shadow: 0 0 25px #39ff14; }
+    100% { transform: scale(1); color: #fffb00; box-shadow: 0 0 12px #00ffff; }
+}
+
+
+.contenedor-corazones {
+    display: flex; 
+    justify-content: center; 
+    gap: 15px; 
+    margin-bottom: 25px; 
+    width: 100%;
+}
+
+.pixel-heart {
+    width: 32px; 
+    height: 32px;
+    background-image: url('corazon.png');
+    background-size: contain; 
+    background-repeat: no-repeat;
+    background-position: center;
+    image-rendering: pixelated; 
+    transition: all 0.3s ease;
+}
+
+/* Animación cuando pierdes la vida*/
+.heart-lost-retro {
+    animation: desvanecerOchentero 0.7s steps(6) forwards;
+}
+
+@keyframes desvanecerOchentero {
+    0% {
+        filter: drop-shadow(0 0 8px #ff0055) brightness(1.3);
+        transform: scale(1);
+        opacity: 1;
+    }
+    20% {
+        filter: drop-shadow(0 0 20px #ff0000) hue-rotate(90deg);
+        transform: scale(1.2);
+        opacity: 0.8;
+    }
+    40% {
+        opacity: 0.2;
+        transform: scale(0.9);
+    }
+    60% {
+        filter: brightness(0) invert(1) drop-shadow(0 0 10px #00ffff);
+        opacity: 0.7;
+    }
+    80% {
+        transform: scale(0.5);
+        opacity: 0.3;
+    }
+    100% {
+        transform: scale(0);
+        opacity: 0;
+        filter: none;
+    }
+}
+
+.round-banner {
+    font-size: 0.75rem;
+    color: #00ffff;
+    text-shadow: 2px 2px 0px #ff007f;
+    margin-bottom: 20px;
+    border: 2px dashed #ff007f;
+    padding: 6px 12px;
+    background-color: #0a0112;
+}
+
+.retro-modal {
+    position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+    background-color: rgba(10, 1, 18, 0.9);
+    display: flex; justify-content: center; align-items: center;
+    z-index: 9999;
+}
+
+.retro-modal-content {
+    background-color: #140526;
+    border: 4px solid #ffaa00;
+    box-shadow: 0 0 25px #ffaa00;
+    padding: 30px; max-width: 400px; width: 90%; text-align: center;
+}
+
+.retro-modal-content h2 {
+    color: #ff003c; font-size: 1.2rem; margin-top: 0; text-shadow: 2px 2px 0px #000;
+}
+
+.retro-modal-content p {
+    font-size: 0.55rem; line-height: 1.5; color: #ffffff; margin: 20px 0;
+}
+
+.modal-buttons {
+    display: flex; gap: 15px; justify-content: center;
+}
+
+.modal-buttons button {
+    font-family: 'Press Start 2P', monospace; font-size: 0.55rem;
+    padding: 10px 15px; cursor: pointer; border: 2px solid; margin: 0;
+}
+
+#modalBtnYes {
+    background-color: #ff003c; color: #fff; border-color: #ff003c;
+}
+#modalBtnNo {
+    background-color: #1a0b2e; color: #00ffff; border-color: #00ffff;
+}

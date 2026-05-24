@@ -5,16 +5,18 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="GTS.css">
+    <link rel="stylesheet" href="efectos.css">
     <link rel="icon" href="cdRetro.webp">
     <title>Guess The Song - RetroBeats</title>
 </head>
 
 <body>
+    <div id="marcador" class="marcador-exterior" style="display: none;"><b>SCORE: 00000</b></div>
+
     <main id="gameContainer">
         <h1>RetroBeats</h1>
 
         <div id="startMenu">
-            
             <div id="stepMode">
                 <h2 style="font-size: 0.8rem; color: #00ffff; margin-bottom: 15px;">SELECT GAME MODE</h2>
                 <div class="option-row">
@@ -34,20 +36,26 @@
                 <input id="searchInput" type="text" placeholder="Select option above..." disabled>
 
                 <div class="option-row" style="margin-top: 15px;">
-                    <button id="btnBackToMode" class="option-btn" style="border-color: #ff007f; color: #ff007f; max-width: 100px;">BACK</button>
+                    <button id="btnBackToMode" class="option-btn"
+                        style="border-color: #ff007f; color: #ff007f; max-width: 100px;">BACK</button>
                     <button id="btnStartGame" style="margin: 0; flex: 2;">PLAY</button>
                 </div>
             </div>
         </div>
 
         <div id="gameZone" style="display: none;">
+            <div id="heartsCounter" class="contenedor-corazones"></div>
+
+            <div id="roundCounter" class="round-banner" style="display: none;">ROUND 1 / 5</div>
+
             <div class="audio-row">
                 <button id="replayBtn">▶</button>
-                <progress id="progressBar" value="0" max="30"></progress>
+                <progress id="progressBar" value="0" max="30000"></progress>
             </div>
 
-            <p id="timeCounter" style="margin-top: 5px; font-family: monospace;">0.0s / 30s</p>
-            <p id="marcador"><b>SCORE: 00000</b></p>
+            <p id="timeCounter"
+                style="margin-top: 15px; font-size: 0.65rem; color: #ffaa00; text-shadow: 1px 1px 0px #000;">0s / 30s
+            </p>
 
             <input id="guessInput" type="text" placeholder="guess the name of the song" autocomplete="off">
             <div id="customSuggestions" class="suggestions-box"></div>
@@ -55,13 +63,36 @@
             <button id="btnCheck">try</button>
             <br>
             <button id="btnNextSong" style="display: none;">next song</button>
-            
-            <p id="feedbackText"></p>
-            <p id="heartsCounter"></p>
-        </div>
 
+            <p id="feedbackText"></p>
+
+            <button id="btnQuitGame" onclick="botonRendirseSalir()"
+                style="background-color: #441166; font-size: 0.55rem; padding: 8px 12px; margin-top: 25px; box-shadow: none; border-color: #8833cc;">GIVE
+                UP / MENU</button>
+        </div>
     </main>
 
+    <div id="customModal" class="retro-modal" style="display: none;">
+        <div class="retro-modal-content">
+            <h2>GIVE UP?</h2>
+            <p>ARE YOU SURE YOU WANT TO QUIT AND LOSE ALL YOUR ARCADE SCORE?</p>
+            <div class="modal-buttons">
+                <button id="modalBtnYes">YES, QUIT</button>
+                <button id="modalBtnNo">NO, STAY</button>
+            </div>
+        </div>
+    </div>
+
+    <div id="scoreModal" class="retro-modal" style="display: none;">
+        <div class="retro-modal-content">
+            <h2 style="color: #39ff14;">MATCH FINISHED!</h2>
+            <p id="finalScoreText" style="font-size: 0.8rem; color: #fffb00; margin: 30px 0;">YOUR TOTAL SCORE: 0</p>
+            <div class="modal-buttons">
+                <button id="btnFinishMatch" style="background-color: #00ffff; color: #000; border-color: #00ffff;">CONTINUE</button>
+            </div>
+        </div>
+    </div>
+    
     <script src="audioGTS.js"></script>
     <script src="modoGTS.js"></script>
     <script src="GTS.js"></script>

@@ -61,10 +61,18 @@ btnTypeArtist.addEventListener("click", () => {
 btnStartGame.addEventListener("click", () => {
     const valorBusqueda = searchInput.value.trim();
     
-    // Si no han escrito nada, frena la ejecución
     if (!valorBusqueda) return;
 
-    // Dispara la función constructora que vivirá en GTS.js
+    // NUEVO: Validador de teclado
+    const patronEstructura = /^[a-zA-Z0-9\sñÑáéíóúÁÉÍÓÚüÜ\-]{2,}$/;
+    
+    if (!patronEstructura.test(valorBusqueda)) {
+        alert("INVALID INPUT!\nPlease type a valid keyword or text name for the Artist / Genre.");
+        searchInput.value = "";
+        searchInput.focus();
+        return;
+    }
+
     if (typeof empezarJuego === "function") {
         empezarJuego(valorBusqueda);
     }
