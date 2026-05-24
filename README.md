@@ -44,6 +44,6 @@ Antes de empezar, el jugador debe seleccionar una categoría (**Género** o **Ar
 
   1. Clona este repositorio:
    ```bash
-   git clone [https://github.com/Dario0608/GTS_.git](https://github.com/Dario0608/GTS_.git)
+   git clone https://github.com/Dario0608/GTS_.git
 
  
