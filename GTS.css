@@ -48,7 +48,7 @@ body {
     font-size: 0.8rem;
 }
 
-#feedback {
+#feedbackText {
     font-size: 0.7rem;
     line-height: 1.4;
     margin: 15px 0;
@@ -137,20 +137,20 @@ button:active {
     box-shadow: 0 0px 0px transparent, 0 0 10px #ff007f;
 }
 
-#check, #next {
+#btnCheck, #btnNextSong {
     width: 100%;
     max-width: 360px;
     margin: 10px auto;
     display: block;
 }
 
-#next {
+#btnNextSong {
     background-color: #39ff14; 
     color: #000000;
     box-shadow: 0 6px 0px #22990c, 0 0 10px #39ff14;
 }
 
-#next:hover {
+#btnNextSong:hover {
     background-color: #ffffff;
     color: #000000;
     box-shadow: 0 6px 0px #cccccc, 0 0 15px #ffffff;
@@ -244,4 +244,70 @@ progress::-moz-progress-bar {
 
 .suggestions-box::-webkit-scrollbar-thumb:hover {
     background-color: #ffaa00;
+}
+
+/***********************************************/
+
+#startMenu {
+    width: 100%;
+}
+
+#stepMode, #stepSearch {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
+.option-row {
+    display: flex;
+    gap: 10px;
+    width: 100%;
+    max-width: 360px;
+    margin-bottom: 15px;
+}
+
+.option-btn {
+    flex: 1;
+    padding: 12px;
+    font-size: 0.65rem;
+    background-color: #1a0b2e;
+    color: #00ffff;
+    border: 2px solid #00ffff;
+    box-shadow: 0 0 5px #00ffff;
+    margin: 0;
+    transition: all 0.2s;
+}
+
+.option-btn.active {
+    background-color: #00ffff;
+    color: #000000;
+    box-shadow: 0 0 15px #00ffff;
+    transform: scale(1.05);
+}
+
+.action-btn {
+    background-color: #ff007f;
+    color: #ffffff;
+    border: 3px solid #ffffff;
+    font-family: 'Press Start 2P', monospace;
+    font-size: 0.8rem;
+    padding: 15px 25px;
+    cursor: pointer;
+    text-transform: uppercase;
+    box-shadow: 0 6px 0px #99004d, 0 0 10px #ff007f;
+    width: 100%;
+    max-width: 360px;
+}
+
+#btnStartGame {
+    background-color: #fffb00;
+    color: #000000;
+    box-shadow: 0 6px 0px #ccaa00, 0 0 15px #fffb00;
+    width: 100%;
+}
+
+#btnStartGame:hover {
+    background-color: #ffffff;
+    box-shadow: 0 6px 0px #cccccc, 0 0 20px #ffffff;
 }

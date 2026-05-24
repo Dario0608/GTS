@@ -5,36 +5,60 @@ let puntos = 0;
 let tiempoPermitido = 5;
 let timeoutSugerencias = null;
 
+// Elementos del contenedor principal
 const contenedorJuego = document.getElementById("gameContainer");
-
-const barraProgreso = document.getElementById("progressBar");
-const start = document.getElementById("play");
+const menuInicio = document.getElementById("startMenu");
 const zonaJuego = document.getElementById("gameZone");
 
-const entrada = document.getElementById("guess");
-const comprobar = document.getElementById("check");
-const respuesta = document.getElementById("feedback");
-const intentos = document.getElementById("hearts");
-
-const botonReplay = document.getElementById("replayBtn");
-const siguienteCancion = document.getElementById("next");
+// Elementos de la interfaz de juego activa
+const replayBtn = document.getElementById("replayBtn");
+const progressBar = document.getElementById("progressBar");
+const timeCounter = document.getElementById("timeCounter");
 const marcadorPuntos = document.getElementById("marcador");
-const entradaGenero = document.getElementById("genreSelector");
-const contadorTiempo = document.getElementById("timeCounter");
-const listaSugerencias = document.getElementById("customSuggestions");
+const guessInput = document.getElementById("guessInput");
+const customSuggestions = document.getElementById("customSuggestions");
+const btnCheck = document.getElementById("btnCheck");
+const btnNextSong = document.getElementById("btnNextSong");
+const feedbackText = document.getElementById("feedbackText");
+const heartsCounter = document.getElementById("heartsCounter");
 
 
+function empezarJuego(terminoBusqueda) {
+    // 1. Reseteamos los contadores estándar del juego
+    vidas = 3;
+    puntos = 0;
+    tiempoPermitido = 5;
 
-async function buscarCancion(genero) {
-    const url = `https://itunes.apple.com/search?term=${genero}&entity=song&limit=50`;
+    // 2. Sincronizamos la interfaz visual inicial
+    marcadorPuntos.innerHTML = `<b>SCORE: 00000</b>`;
+    heartsCounter.innerText = `Lifes left: ${vidas}`;
+    feedbackText.innerText = "";
+    guessInput.value = "";
+
+    // 3. Transición de visibilidad de pantallas
+    menuInicio.style.display = "none";
+    zonaJuego.style.display = "block";
+
+    // 4. Llama a la API de música pasándole el texto final
+    buscarCancion(terminoBusqueda);
+}
+
+
+async function buscarCancion(termino) {
+    const url = `https://itunes.apple.com/search?term=${encodeURIComponent(termino)}&entity=song&limit=50`;
 
     try {
         const respuesta = await fetch(url);
         const datos = await respuesta.json();
         const listaCanciones = datos.results;
 
-        const indiceAleat = Math.floor(Math.random() * listaCanciones.length);
+        if (listaCanciones.length === 0) {
+            alert("No music found! Try another keyword.");
+            if (typeof resetearMenuInicial === "function") resetearMenuInicial();
+            return;
+        }
 
+        const indiceAleat = Math.floor(Math.random() * listaCanciones.length);
         cancionSecreta = listaCanciones[indiceAleat];
 
         if (reproductorAudio !== null) {
@@ -45,157 +69,136 @@ async function buscarCancion(genero) {
         reproductorAudio = new Audio(cancionSecreta.previewUrl);
 
         reproductorAudio.addEventListener("timeupdate", () => {
-            barraProgreso.value = reproductorAudio.currentTime;
-            contadorTiempo.innerText = `${reproductorAudio.currentTime.toFixed(1)}s / 30s`;
+            progressBar.value = reproductorAudio.currentTime;
+            timeCounter.innerText = `${reproductorAudio.currentTime.toFixed(1)}s / 30s`;
 
             if (reproductorAudio.currentTime >= tiempoPermitido) {
                 reproductorAudio.pause();
                 reproductorAudio.currentTime = 0;
-                botonReplay.innerText = "▶";
+                replayBtn.innerText = "▶";
             }
         });
 
         reproductorAudio.play();
-        console.log("Escuchando canción secreta");
+        replayBtn.innerText = "II";
 
     } catch (error) {
-        console.error(error);
+        console.error("Error conectando con iTunes:", error);
     }
 }
 
+// Limpiar cadenas de texto (quitar tildes y mayúsculas)
 function limpiarTexto(texto) {
-
-    let textoSeguro = String(texto);
-
-    return textoSeguro
+    return String(texto)
         .trim()
         .toLowerCase()
         .normalize("NFD")
         .replace(/[\u0300-\u036f]/g, "");
 }
 
-start.addEventListener("click", () => {
-    const generoElegido = entradaGenero.value.trim();
-    if (!generoElegido) return;
 
-    console.log("Iniciando juego...");
-    buscarCancion(generoElegido);
+btnCheck.addEventListener("click", () => {
+    if (!cancionSecreta) return;
 
-    entradaGenero.style.display = "none";
-    start.style.display = "none";
-    siguienteCancion.style.display = "none";
-    zonaJuego.style.display = "block";
-    intentos.innerText = `Lifes left: ${vidas}`;
-});
-
-comprobar.addEventListener("click", () => {
-    const usuarioLimpio = limpiarTexto(entrada.value);
+    const usuarioLimpio = limpiarTexto(guessInput.value);
     const correctaLimpia = limpiarTexto(cancionSecreta.trackName);
 
     if (usuarioLimpio === correctaLimpia) {
-        respuesta.innerText = "Correct";
-        respuesta.style.color = "green";
+        feedbackText.innerText = "Correct";
+        feedbackText.style.color = "green";
         tiempoPermitido = 30;
 
-        botonReplay.innerText = "▶";
+        replayBtn.innerText = "▶";
         if (reproductorAudio) reproductorAudio.pause();
-        playSonidoAcierto();
+        if (typeof playSonidoAcierto === "function") playSonidoAcierto();
 
-        comprobar.style.display = "none";
-        siguienteCancion.style.display = "block";
+        btnCheck.style.display = "none";
+        btnNextSong.style.display = "block";
         puntos += 100;
-        marcadorPuntos.innerText = `SCORE: ${puntos}`;
+        marcadorPuntos.innerHTML = `<b>SCORE: ${String(puntos).padStart(5, '0')}</b>`;
 
     } else {
-        respuesta.innerText = "Incorrect";
-        respuesta.style.color = "red";
+        feedbackText.innerText = "Incorrect";
+        feedbackText.style.color = "red";
 
-        botonReplay.innerText = "▶";
+        replayBtn.innerText = "▶";
         if (reproductorAudio) reproductorAudio.pause();
-        playSonidoError();
+        if (typeof playSonidoError === "function") playSonidoError();
+        
         contenedorJuego.classList.add("shake-error");
-
-        setTimeout(() => {
-            contenedorJuego.classList.remove("shake-error");
-
-        }, 400);
+        setTimeout(() => contenedorJuego.classList.remove("shake-error"), 400);
 
         --vidas;
-        intentos.innerText = `Lifes left: ${vidas}`;
+        heartsCounter.innerText = `Lifes left: ${vidas}`;
 
-        if (vidas == 2) {
+        if (vidas === 2) {
             tiempoPermitido = 15;
-            setTimeout(() => {
-                if (reproductorAudio) reproductorAudio.play();
-            }, 800);
-        } else if (vidas == 1) {
+            setTimeout(() => { if (reproductorAudio) reproductorAudio.play(); replayBtn.innerText = "II"; }, 800);
+        } else if (vidas === 1) {
             tiempoPermitido = 30;
-            setTimeout(() => {
-                if (reproductorAudio) reproductorAudio.play();
-            }, 800);
-        } else if (vidas == 0) {
-            respuesta.innerText = `You Lost :/ The song was: ${cancionSecreta.trackName} by ${cancionSecreta.artistName}`;
-            comprobar.style.display = "none";
-            siguienteCancion.style.display = "block";
+            setTimeout(() => { if (reproductorAudio) reproductorAudio.play(); replayBtn.innerText = "II"; }, 800);
+        } else if (vidas === 0) {
+            feedbackText.innerText = `You Lost :/ The song was: ${cancionSecreta.trackName} by ${cancionSecreta.artistName}`;
+            btnCheck.style.display = "none";
+            btnNextSong.style.display = "block";
+            if (typeof playSonidoGameOver === "function") playSonidoGameOver();
         }
     }
-
 });
 
-siguienteCancion.addEventListener("click", () => {
-    respuesta.innerText = "";
-    entrada.value = "";
-    listaSugerencias.innerHTML = "";
-    barraProgreso.value = 0;
-    contadorTiempo.innerText = "0.0s / 30s";
-    vidas = 3;
-    tiempoPermitido = 5;
-    intentos.innerText = `Lifes left: ${vidas}`;
 
+btnNextSong.addEventListener("click", () => {
+    // Detiene reproducciones residuales
+    if (reproductorAudio) { reproductorAudio.pause(); reproductorAudio.currentTime = 0; }
+
+    // Limpia la pantalla de juego
     zonaJuego.style.display = "none";
-    siguienteCancion.style.display = "none";
-    comprobar.style.display = "block";
+    btnNextSong.style.display = "none";
+    btnCheck.style.display = "block";
+    customSuggestions.innerHTML = "";
+    customSuggestions.style.display = "none";
 
-    entradaGenero.style.display = "inline-block";
-    entradaGenero.value = "";
-    start.style.display = "inline-block";
-
-
+    // Invoca la función del otro archivo para resetear las elecciones
+    if (typeof resetearMenuInicial === "function") {
+        resetearMenuInicial();
+    }
 });
 
-botonReplay.addEventListener("click", () => {
+// Control manual Play/Pause
+replayBtn.addEventListener("click", () => {
     if (reproductorAudio) {
         if (!reproductorAudio.paused) {
             reproductorAudio.pause();
-            botonReplay.innerText = "▶";
+            replayBtn.innerText = "▶";
         } else {
             reproductorAudio.play();
-            botonReplay.innerText = "II";
+            replayBtn.innerText = "II";
         }
     }
-})
+});
 
-entrada.addEventListener("input", () => {
+
+guessInput.addEventListener("input", () => {
     clearTimeout(timeoutSugerencias);
-    const textoUsuario = entrada.value.trim();
+    const textoUsuario = guessInput.value.trim();
 
     if (textoUsuario.length < 3) {
-        listaSugerencias.innerHTML = "";
-        listaSugerencias.style.display = "none";
+        customSuggestions.innerHTML = "";
+        customSuggestions.style.display = "none";
         return;
     }
 
     timeoutSugerencias = setTimeout(async () => {
-        const url = `https://itunes.apple.com/search?term=${textoUsuario}&entity=song&limit=5`;
+        const url = `https://itunes.apple.com/search?term=${encodeURIComponent(textoUsuario)}&entity=song&limit=5`;
 
         try {
-            const respuesta = await fetch(url);
-            const datos = await respuesta.json();
+            const respuestaApi = await fetch(url);
+            const datos = await respuestaApi.json();
 
-            listaSugerencias.innerHTML = "";
+            customSuggestions.innerHTML = "";
 
             if (datos.results.length === 0) {
-                listaSugerencias.style.display = "none";
+                customSuggestions.style.display = "none";
                 return;
             }
 
@@ -205,24 +208,25 @@ entrada.addEventListener("input", () => {
                 item.innerText = cancion.trackName;
 
                 item.addEventListener("click", () => {
-                    entrada.value = cancion.trackName;
-                    listaSugerencias.innerHTML = "";
-                    listaSugerencias.style.display = "none";
+                    guessInput.value = cancion.trackName;
+                    customSuggestions.innerHTML = "";
+                    customSuggestions.style.display = "none";
                 });
-                listaSugerencias.appendChild(item);
+
+                customSuggestions.appendChild(item);
             });
-            listaSugerencias.style.display = "block";
+
+            customSuggestions.style.display = "block";
+
         } catch (error) {
             console.error(error);
         }
     }, 200);
-
 });
 
 document.addEventListener("click", (e) => {
-if(e.target !== entrada && e.target !== listaSugerencias){
-    listaSugerencias.innerHTML = "";
-    listaSugerencias.style.display = "none";
-}
+    if (e.target !== guessInput && e.target !== customSuggestions) {
+        customSuggestions.innerHTML = "";
+        customSuggestions.style.display = "none";
+    }
 });
-

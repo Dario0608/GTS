@@ -5,16 +5,40 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="GTS.css">
-    <title>Guess The Song</title>
+    <link rel="icon" href="cdRetro.webp">
+    <title>Guess The Song - RetroBeats</title>
 </head>
 
 <body>
     <main id="gameContainer">
         <h1>RetroBeats</h1>
 
-        <input id="genreSelector" type="text" placeholder="type a genre (e.g. pop, rock, salsa)">
+        <div id="startMenu">
+            
+            <div id="stepMode">
+                <h2 style="font-size: 0.8rem; color: #00ffff; margin-bottom: 15px;">SELECT GAME MODE</h2>
+                <div class="option-row">
+                    <button id="btnModeSurvival" class="option-btn">SURVIVAL</button>
+                    <button id="btnModeRounds" class="option-btn">5 ROUNDS</button>
+                </div>
+                <button id="btnToStepSearch" class="action-btn" style="display: none; margin-top: 20px;">NEXT</button>
+            </div>
 
-        <button id="play">Start</button>
+            <div id="stepSearch" style="display: none;">
+                <h2 style="font-size: 0.8rem; color: #00ffff; margin-bottom: 15px;">SEARCH BY</h2>
+                <div class="option-row">
+                    <button id="btnTypeGenre" class="option-btn">GENRE</button>
+                    <button id="btnTypeArtist" class="option-btn">ARTIST</button>
+                </div>
+
+                <input id="searchInput" type="text" placeholder="Select option above..." disabled>
+
+                <div class="option-row" style="margin-top: 15px;">
+                    <button id="btnBackToMode" class="option-btn" style="border-color: #ff007f; color: #ff007f; max-width: 100px;">BACK</button>
+                    <button id="btnStartGame" style="margin: 0; flex: 2;">PLAY</button>
+                </div>
+            </div>
+        </div>
 
         <div id="gameZone" style="display: none;">
             <div class="audio-row">
@@ -23,20 +47,23 @@
             </div>
 
             <p id="timeCounter" style="margin-top: 5px; font-family: monospace;">0.0s / 30s</p>
-
             <p id="marcador"><b>SCORE: 00000</b></p>
 
-            <input id="guess" type="text" list="suggestion" placeholder="guess the name of the song">
+            <input id="guessInput" type="text" placeholder="guess the name of the song" autocomplete="off">
             <div id="customSuggestions" class="suggestions-box"></div>
+
+            <button id="btnCheck">try</button>
+            <br>
+            <button id="btnNextSong" style="display: none;">next song</button>
             
-            <button id="check">try</button>
-            <br><button id="next">next song</button>
-            <p id="feedback"></p>
-            <p id="hearts"></p>
+            <p id="feedbackText"></p>
+            <p id="heartsCounter"></p>
         </div>
 
     </main>
+
     <script src="audioGTS.js"></script>
+    <script src="modoGTS.js"></script>
     <script src="GTS.js"></script>
 </body>
 
